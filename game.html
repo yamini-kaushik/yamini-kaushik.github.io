@@ -1,0 +1,77 @@
+<html ng-app lang="en-US">
+<head>
+<meta name="viewport" content="width=device-width, height=device-height, target-densitydpi=high-dpi, initial-scale=1.0>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+</head>
+
+<body>
+<div ng-controller="gameController">
+<button ng-click="next()" ng-hide="numbers.length>=2">Start</button>
+<span ng-show="score>=0">Your score {{score}}</span>
+<div ng-show="numbers.length>=2">
+<span style="color: #ffffff; background-color: #000000">{{sec}}</span>
+<table>
+	<tr ng-repeat="i in numbers">
+	<td ng-repeat="j in numbers">
+<span ng-hide="i==row && j==column" ng-style="{'background-color':color[colorIndex], 'color':color[colorIndex]}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span ng-show="i==row && j==column" ng-style="{'background-color':differentColor[colorIndex], 'color':differentColor[colorIndex]}" ng-click="next()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+</td>
+</tr>
+</table>
+{{message}}
+</div>
+</div>
+ <script>
+    function gameController($scope,$window,$timeout)
+    {
+$scope.numbers =[1];
+$scope.color=['#000000','#FF0000','#660000','#663300','#C2AD99','#DB704D','#B88A00','#664C00','#FFFF4D','#B2B200','#ADAD85','#4C4C33','#5C8533','#295200','#70B894','#1F5C3D','#997A5C','#85FF5C','#33801A','#B84DFF','#5C0099','#E6E6E6','#999999','#A3A3C2','#3D3D5C'];
+$scope.differentColor=['#1A140F','#CC0000','#990000','#472400','#A38566','#D14719','#CC9900','#523D00','#FFFF00','#CCCC00','#C2C2A3','#6B6B47','#85A366','#1F3D00','#99CCB2','#297A52','#80664C','#66FF33','#47B224','#A319FF','#3D0066','#CCCCCC','#808080','#8585AD','#29293D'];
+$scope.counter=60;
+$scope.len1=$scope.color.length;
+
+$scope.next=function(){
+if($scope.counter==60)
+{
+$scope.countdown ();
+$scope.score=-1;
+}
+if($scope.counter>0)
+{
+if($scope.numbers.length<=10)
+{
+var n=$scope.numbers.length+1;
+$scope.numbers.push(n);
+}
+$scope.colorIndex = $window.Math.floor(($window.Math.random()*$scope.len1));
+$scope.rightColorNumer = $window.Math.floor(($window.Math.random()*$window.Math.pow($scope.numbers.length, 2))+1); 
+$scope.row=$window.Math.ceil($scope.rightColorNumer/$scope.numbers.length);
+$scope.column=$scope.rightColorNumer%$scope.numbers.length;
+if($scope.column==0)
+$scope.column=$scope.numbers.length;
+$scope.score=$scope.score+1;
+$scope.message="row "+$scope.row+" column "+$scope.column+" score:"+$scope.score;
+}
+};
+
+$scope.countdown = function() {
+    	    stopped = $timeout(function() {
+    	     $scope.counter--;
+    	     var tempSec=$scope.counter;    	     
+    	     if(tempSec<10)
+    	    	 $scope.sec='0'+tempSec;
+    	     else
+    	     	$scope.sec=tempSec;
+if($scope.counter==0)
+{$scope.numbers =[1];
+$scope.counter=60;
+}
+else
+    	     $scope.countdown();   
+    	    }, 1000);
+    	  };
+}
+</script>
+</body>
+</html>
